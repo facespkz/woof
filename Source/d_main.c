@@ -728,6 +728,11 @@ static void PrepareAutoloadPaths (void)
         }
         else if (autoload_basedirs[i].func)
         {
+#if !defined(_WIN32) || defined(_WIN32_WCE)
+            // don't create autoload in DoomExeDir on non-Windows
+            if (autoload_basedirs[i].func() == D_DoomExeDir())
+                continue;
+#endif
             autoload_paths[i] = M_StringJoin(autoload_basedirs[i].func(), DIR_SEPARATOR_S, "autoload", NULL);
         }
         else
